@@ -1,20 +1,43 @@
 use std::collections::HashMap;
+
 use std::mem;
+
+use crate::Character;
+
+pub type State = Vec<Character>;
+pub type Rules = HashMap<Character, State>;
+
+pub fn dump(state: State) -> String {
+    let mut string = String::new();
+    for character in state {
+        string.push_str(&format!("{}", character));
+    }
+    string
+}
 
 #[derive(Debug)]
 pub struct System {
-    rules: HashMap<char, &'static str>,
-    start: String,
+    rules: Rules,
+    start: State,
 }
 
-impl<'a> System {
-    pub fn new(rules: HashMap<char, &'static str>, start: String) -> Self {
-        Self { rules, start }
+impl System {
+    pub fn new(mut rules: Rules, constants: Vec<Character>, start: State) -> Self {
+        for constant in constants.into_iter() {
+            rules
+                .entry(constant.clone())
+                .or_insert_with(|| vec![constant]);
+        }
+
+        Self {
+            rules,
+            start: start.to_vec(),
+        }
     }
 }
 
 impl IntoIterator for System {
-    type Item = String;
+    type Item = State;
 
     type IntoIter = SystemIterator;
 
@@ -24,29 +47,32 @@ impl IntoIterator for System {
 }
 
 pub struct SystemIterator {
-    state: String,
-    rules: HashMap<char, &'static str>,
+    state: State,
+    rules: Rules,
+    buffer: State,
 }
 
-impl<'a> SystemIterator {
-    fn new(state: String, rules: HashMap<char, &'static str>) -> Self {
-        Self { state, rules }
+impl SystemIterator {
+    fn new(state: State, rules: Rules) -> Self {
+        Self {
+            state,
+            rules,
+            buffer: Vec::new(),
+        }
     }
 }
 
 impl Iterator for SystemIterator {
-    type Item = String;
+    type Item = State;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let mut next = String::new();
-        for c in self.state.chars() {
-            match self.rules.get(&c) {
-                Some(replacement) => next.push_str(&replacement),
-                None => next.push(c),
+        for character in &self.state {
+            match self.rules.get(&character) {
+                Some(replacement) => self.buffer.append(&mut replacement.clone()),
+                None => self.buffer.push(character.clone()),
             }
         }
-
-        let previous = mem::replace(&mut self.state, next);
-        Some(previous)
+        mem::swap(&mut self.state, &mut self.buffer);
+        Some(mem::take(&mut self.buffer))
     }
 }
