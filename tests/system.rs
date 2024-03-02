@@ -27,7 +27,7 @@ fn test_algae() {
         "ABAABABAABAABABAABABAABAABABAABAAB",
     ];
 
-    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(s)).collect();
+    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(&s)).collect();
 
     assert_eq!(actual, expected);
 }
@@ -63,7 +63,7 @@ fn test_fractal_tree() {
         "1111[11[1[0]0]1[0]0]11[1[0]0]1[0]0",
     ];
 
-    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(s)).collect();
+    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(&s)).collect();
 
     assert_eq!(actual, expected);
 }
@@ -103,7 +103,7 @@ F+F-F-F+F+F+F-F-F+F-F+F-F-F+F-F+F-F-F+F+F+F-F-F+F+\
 F+F-F-F+F+F+F-F-F+F-F+F-F-F+F-F+F-F-F+F+F+F-F-F+F",
     ];
 
-    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(s)).collect();
+    let actual: Vec<_> = iterator.take(expected.len()).map(|s| dump(&s)).collect();
 
     assert_eq!(actual, expected);
 }

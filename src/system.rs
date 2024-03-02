@@ -1,13 +1,11 @@
-use std::collections::HashMap;
-
-use std::mem;
-
 use crate::Character;
+use std::collections::HashMap;
+use std::mem;
 
 pub type State = Vec<Character>;
 pub type Rules = HashMap<Character, State>;
 
-pub fn dump(state: State) -> String {
+pub fn dump(state: &State) -> String {
     let mut string = String::new();
     for character in state {
         string.push_str(&format!("{}", character));
