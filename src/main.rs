@@ -3,8 +3,7 @@ use l_system::{Character, System};
 use std::collections::HashMap;
 
 fn main() {
-    let config = Config::new(1, 1.1, 90.0, 10.0);
-    let mut window = Visualizer::new("L-System - Dragon Curve", (640, 480), config);
+    let config = Config::new(1, 1.0, 1.1, 120.0, 45.0);
 
     let mut rules = HashMap::new();
     rules.insert(
@@ -14,11 +13,19 @@ fn main() {
             Character::Right,
             Character::Draw,
             Character::Left,
+            Character::Draw,
         ],
     );
     let constants = vec![Character::Left, Character::Right];
-    let start = vec![Character::Draw, Character::Right];
+    let start = vec![
+        Character::Draw,
+        Character::Left,
+        Character::Draw,
+        Character::Left,
+        Character::Draw,
+    ];
     let system = System::new(rules, constants, start);
 
-    window.run(system);
+    let mut visualizer = Visualizer::new("L-Systems", (640, 480), system, config);
+    visualizer.run();
 }

@@ -13,7 +13,7 @@ pub fn dump(state: &State) -> String {
     string
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct System {
     rules: Rules,
     start: State,
@@ -53,10 +53,14 @@ pub struct SystemIterator {
 impl SystemIterator {
     fn new(state: State, rules: Rules) -> Self {
         Self {
-            state,
+            state: state.clone(),
             rules,
-            buffer: Vec::new(),
+            buffer: state,
         }
+    }
+
+    pub fn state(&self) -> &State {
+        &self.state
     }
 }
 
@@ -64,6 +68,7 @@ impl Iterator for SystemIterator {
     type Item = State;
 
     fn next(&mut self) -> Option<Self::Item> {
+        self.buffer.clear();
         for character in &self.state {
             match self.rules.get(&character) {
                 Some(replacement) => self.buffer.append(&mut replacement.clone()),
