@@ -1,6 +1,6 @@
 use core::fmt;
 
-// Character        Meaning
+// Smybol           Meaning
 // -------------------------------------------------------------------------
 //    F             Move forward by line length drawing a line
 //    f             Move forward by line length without drawing a line
@@ -23,7 +23,7 @@ use core::fmt;
 // source: http://www.paulbourke.net/fractals/lsys/
 
 #[derive(Debug, Eq, Hash, PartialEq, Clone)]
-pub enum Character {
+pub enum Symbol {
     Var(char),
     Draw,
     Move,
@@ -44,7 +44,7 @@ pub enum Character {
     DecAngle,
 }
 
-impl From<char> for Character {
+impl From<char> for Symbol {
     fn from(c: char) -> Self {
         match c {
             'F' => Self::Draw,
@@ -69,7 +69,7 @@ impl From<char> for Character {
     }
 }
 
-impl fmt::Display for Character {
+impl fmt::Display for Symbol {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let c = match self {
             Self::Draw => 'F',

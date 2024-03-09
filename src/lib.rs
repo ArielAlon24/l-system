@@ -1,6 +1,7 @@
-pub mod character;
 pub mod graphics;
+pub mod macros;
+pub mod symbol;
 pub mod system;
 
-pub use character::Character;
-pub use system::{dump, State, System};
+pub use symbol::Symbol;
+pub use system::{dump, State, System, SystemIterator};

@@ -1,14 +1,14 @@
-use crate::Character;
+use crate::Symbol;
 use std::collections::HashMap;
 use std::mem;
 
-pub type State = Vec<Character>;
-pub type Rules = HashMap<Character, State>;
+pub type State = Vec<Symbol>;
+pub type Rules = HashMap<Symbol, State>;
 
 pub fn dump(state: &State) -> String {
     let mut string = String::new();
-    for character in state {
-        string.push_str(&format!("{}", character));
+    for symbol in state {
+        string.push_str(&format!("{}", symbol));
     }
     string
 }
@@ -20,7 +20,7 @@ pub struct System {
 }
 
 impl System {
-    pub fn new(mut rules: Rules, constants: Vec<Character>, start: State) -> Self {
+    pub fn new(mut rules: Rules, constants: Vec<Symbol>, start: State) -> Self {
         for constant in constants.into_iter() {
             rules
                 .entry(constant.clone())
