@@ -4,13 +4,20 @@
 
 ## Example
 
-```math
-\begin{align}
-&start = X \\
-&F \rightarrow FF \\
-&X \rightarrow F-[[X]+X]+F[+FX]-X \\
-&\theta = 22.5
-\end{align}
+```
+[config]
+line_length = 3
+line_width_increment = 1.0
+line_length_scale_factor = 1.1
+turning_angle = 22.5
+turning_angle_increment = 45.0
+
+[rules]
+F -> FF
+X -> F-[[X]+X]+F[+FX]-X
+
+[start]
+axiom = X
 ```
 
-![branch](./examples/branch.png)
+![branch](./imagesg/branch.png)
