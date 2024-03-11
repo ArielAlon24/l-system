@@ -1,6 +1,6 @@
 use crate::graphics::Config;
 use crate::graphics::StateDrawer;
-use crate::{State, System, SystemIterator};
+use crate::system::{State, System, SystemIterator};
 use raylib::prelude::*;
 use std::sync::mpsc::Sender;
 use std::sync::{mpsc, Arc, Mutex};

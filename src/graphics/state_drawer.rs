@@ -1,5 +1,5 @@
 use crate::graphics::Config;
-use crate::{State, Symbol};
+use crate::system::{State, Symbol};
 use raylib::prelude::*;
 
 pub trait StateDrawer {

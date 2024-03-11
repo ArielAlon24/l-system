@@ -1,19 +1,16 @@
-use l_system::{dump, Character, System};
+use l_system::system::{dump, Symbol, System};
+use l_system::{state, symbol};
 use std::collections::HashMap;
 
 #[test]
 fn test_algae() {
     let mut rules = HashMap::new();
-    rules.insert(
-        Character::Var('A'),
-        vec![Character::Var('A'), Character::Var('B')],
-    );
-    rules.insert(Character::Var('B'), vec![Character::Var('A')]);
+    rules.insert(symbol!('A'), state!("AB"));
+    rules.insert(symbol!('B'), state!("A"));
 
-    let constants = vec![];
-    let start = vec![Character::Var('A')];
+    let start = state!("A");
 
-    let system = System::new(rules, constants, start);
+    let system = System::new(rules, start);
     let iterator = system.into_iter();
 
     let expected = vec![
@@ -35,25 +32,11 @@ fn test_algae() {
 #[test]
 fn test_fractal_tree() {
     let mut rules = HashMap::new();
-    rules.insert(
-        Character::Var('1'),
-        vec![Character::Var('1'), Character::Var('1')],
-    );
-    rules.insert(
-        Character::Var('0'),
-        vec![
-            Character::Var('1'),
-            Character::Push,
-            Character::Var('0'),
-            Character::Pop,
-            Character::Var('0'),
-        ],
-    );
+    rules.insert(symbol!('1'), state!("11"));
+    rules.insert(symbol!('0'), state!("1[0]0"));
+    let start = state!("0");
 
-    let constants = vec![Character::Push, Character::Pop];
-    let start = vec![Character::Var('0')];
-
-    let system = System::new(rules, constants, start);
+    let system = System::new(rules, start);
     let iterator = system.into_iter();
 
     let expected = vec![
@@ -71,25 +54,10 @@ fn test_fractal_tree() {
 #[test]
 fn test_koch_curve() {
     let mut rules = HashMap::new();
-    rules.insert(
-        Character::Draw,
-        vec![
-            Character::Draw,
-            Character::Left,
-            Character::Draw,
-            Character::Right,
-            Character::Draw,
-            Character::Right,
-            Character::Draw,
-            Character::Left,
-            Character::Draw,
-        ],
-    );
+    rules.insert(symbol!('F'), state!("F+F-F-F+F"));
+    let start = vec![symbol!('F')];
 
-    let constants = vec![Character::Left, Character::Right];
-    let start = vec![Character::Draw];
-
-    let system = System::new(rules, constants, start);
+    let system = System::new(rules, start);
     let iterator = system.into_iter();
 
     let expected = vec![

@@ -7,6 +7,12 @@ pub struct Config {
     pub turning_angle_increment: f32,
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Config::new(5, 1.0, 1.1, 45.0, 45.0)
+    }
+}
+
 impl Config {
     pub fn new(
         line_length: i32,

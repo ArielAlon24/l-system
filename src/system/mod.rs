@@ -1,6 +1,9 @@
-use crate::Symbol;
+pub mod symbol;
+
+use crate::symbol;
 use std::collections::HashMap;
 use std::mem;
+pub use symbol::Symbol;
 
 pub type State = Vec<Symbol>;
 pub type Rules = HashMap<Symbol, State>;
@@ -20,13 +23,12 @@ pub struct System {
 }
 
 impl System {
-    pub fn new(mut rules: Rules, constants: Vec<Symbol>, start: State) -> Self {
-        for constant in constants.into_iter() {
+    pub fn new(mut rules: Rules, start: State) -> Self {
+        for constant in vec![symbol!('['), symbol!(']'), symbol!('+'), symbol!('-')] {
             rules
                 .entry(constant.clone())
                 .or_insert_with(|| vec![constant]);
         }
-
         Self {
             rules,
             start: start.to_vec(),
