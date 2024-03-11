@@ -20,4 +20,4 @@ X -> F-[[X]+X]+F[+FX]-X
 axiom = X
 ```
 
-![branch](./imagesg/branch.png)
+![branch](./images/branch.png)
