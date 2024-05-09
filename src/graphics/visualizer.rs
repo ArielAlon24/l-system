@@ -11,7 +11,7 @@ pub struct Visualizer {
     width: i32,
     height: i32,
     name: &'static str,
-    system: System,
+    system: Option<System>,
     config: Config,
 }
 
@@ -20,17 +20,12 @@ impl Visualizer {
     const FONT_SCALE: i32 = 30;
     const PADDING: i32 = 4;
 
-    pub fn new(
-        name: &'static str,
-        (width, height): (i32, i32),
-        system: System,
-        config: Config,
-    ) -> Self {
+    pub fn new(name: &'static str, (width, height): (i32, i32), config: Config) -> Self {
         Self {
             width,
             height,
             name,
-            system,
+            system: None,
             config,
         }
     }
@@ -38,7 +33,7 @@ impl Visualizer {
     pub fn run(&mut self) {
         let (mut handle, thread) = self.init();
         let font = Self::load_font(&mut handle, &thread);
-        handle.set_target_fps(60);
+        handle.set_target_fps(20);
 
         let iterator = Arc::new(Mutex::new(self.system.clone().into_iter()));
         let duration = Arc::new(Mutex::new(0.0));
@@ -53,9 +48,11 @@ impl Visualizer {
 
             {
                 let mut d = handle.begin_drawing(&thread);
-                let iter = iterator.lock().unwrap();
-                let time = duration.lock().unwrap();
-                self.draw(&mut d, &font, iter.state(), iteration, *time);
+                if self.system.is_some() {
+                    let iter = iterator.lock().unwrap();
+                    let time = duration.lock().unwrap();
+                    self.draw(&mut d, &font, iter.state(), iteration, *time);
+                }
             }
 
             if handle.is_key_pressed(KeyboardKey::KEY_ENTER) {
@@ -127,18 +124,20 @@ impl Visualizer {
         &mut self,
         d: &mut RaylibDrawHandle,
         font: &Font,
-        state: &State,
+        state: Option<&State>,
         iteration: i32,
         last_duration: f64,
     ) {
         d.clear_background(Color::new(24, 25, 26, 255));
-        d.draw_state(
-            state,
-            self.width / 2,
-            self.height,
-            &mut self.config,
-            Color::new(228, 230, 235, 255),
-        );
+        if let Some(state) = state {
+            d.draw_state(
+                state,
+                self.width / 2,
+                self.height,
+                &mut self.config,
+                Color::new(228, 230, 235, 255),
+            );
+        }
         d.draw_rectangle(
             0,
             0,
@@ -153,13 +152,15 @@ impl Visualizer {
             2 * Self::PADDING + self.height / Self::FONT_SCALE,
             Color::new(228, 230, 235, 255),
         );
-        d.draw_text_ex(
-            &font,
-            &format!("N={}, took: {:.3}s", iteration, last_duration),
-            Vector2::new((2 * Self::PADDING) as f32, Self::PADDING as f32),
-            (self.height / Self::FONT_SCALE) as f32,
-            (Self::PADDING / 2) as f32,
-            Color::new(228, 230, 235, 255),
-        );
+        if state.is_some() {
+            d.draw_text_ex(
+                &font,
+                &format!("N={}, took: {:.3}s", iteration, last_duration),
+                Vector2::new((2 * Self::PADDING) as f32, Self::PADDING as f32),
+                (self.height / Self::FONT_SCALE) as f32,
+                (Self::PADDING / 2) as f32,
+                Color::new(228, 230, 235, 255),
+            );
+        }
     }
 }

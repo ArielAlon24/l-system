@@ -2,6 +2,8 @@
 
 [L-systems](https://en.wikipedia.org/wiki/L-system) implemented in Rust.
 
+> This project is heavily based on the following [specification](http://www.paulbourke.net/fractals/lsys/)
+
 ## Example
 
 ```
